@@ -6,6 +6,8 @@ const Home = (props) => {
   const [data, setData] = useState([]);
   const [value, setValue] = useState([]);
   const [cdata, setCdata] = useState([]);
+  const [tapedata, setTapedata] = useState([]);
+
   //   const [items] = useChromeStorageLocal("", 0);
 
   useEffect(() => {
@@ -16,6 +18,18 @@ const Home = (props) => {
       .then((res) => {
         console.log(res);
         setData(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    axios
+      .get(
+        "https://script.google.com/macros/s/AKfycbxwWD5Vo7_DzU3ymWqURKHa8v_KptwbO0F_g_CcTS79Rgdb-EIZamhVs9rb94zsCp6e/exec"
+      )
+      .then((res) => {
+        console.log(res);
+        setTapedata(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -48,15 +62,55 @@ const Home = (props) => {
 
   const cData = () => {
     var data1 = JSON.parse(localStorage.getItem("tabledata"));
-    setCdata(data1);
+    var data2 = JSON.parse(localStorage.getItem("tableheaddata"));
+    console.log(data2);
+
+    var data3 = [data2[6], data2[7], ...data1];
+    setCdata(data3);
     console.log(data1);
     console.log(data1[0]);
     // document.getElementById("tab-data").innerHTML = data1;
   };
 
+  const updateTapedata = (cdata) => {
+    console.log(cdata);
+    let tname = cdata[0];
+    let price = cdata[1];
+    let peratio = cdata[2];
+    let pbratio = cdata[3];
+    let dy = cdata[4];
+    let spe = cdata[5];
+    let spb = cdata[6];
+    let sdy = cdata[7];
+
+    let tobj = {
+      name: tname,
+      price: price,
+      peratio: peratio,
+      pbratio: pbratio,
+      dy: dy,
+      spe: spe,
+      spb: spb,
+      sdy: sdy,
+    };
+    console.log(tobj);
+
+    axios
+      .post(
+        "https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbxDs_W74jdwGFvZCaP7JzEVhhlHuBBugjMlmvb4YCBYwtML1HjLvJm5dZ2BkGXNDkCM/exec",
+        tobj
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
-      <table class="table">
+      <table className="table">
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -114,6 +168,50 @@ const Home = (props) => {
       <p>{cdata[2]}</p>
       <p>{cdata[3]}</p>
       <p>{cdata[4]}</p>
+      <p>{cdata[5]}</p>
+      <p>{cdata[6]}</p>
+
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">PE-ratio</th>
+            <th scope="col">PB-ratio</th>
+            <th scope="col">Dividend Yield</th>
+
+            <th scope="col">Sector PE</th>
+
+            <th scope="col">Sector PB</th>
+
+            <th scope="col">Sector Div Yld</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tapedata.map((el) => {
+            return (
+              <tr>
+                <th scope="row">{el.name}</th>
+                <td>{el.price}</td>
+                <td>{el.peratio}</td>
+                <td>{el.pbratio}</td>
+                <td>{el.dy}</td>
+                <td>{el.spe}</td>
+                <td>{el.spb}</td>
+
+                <td>{el.sdy}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+
+        <button
+          className="btn btn-danger"
+          onClick={() => updateTapedata(cdata)}
+        >
+          GET UPDATED DATA
+        </button>
+      </table>
     </>
   );
 };
