@@ -8,6 +8,6 @@ for (let i = 0; i < tdata.length; i++) {
   var data = tdata[i].innerHTML;
   arr.push(data);
 }
-chrome.storage.local.set({ tdata: arr }).then(() => {
+chrome.storage.local.set({ tdata: JSON.stringify(arr) }).then(() => {
   console.log("Value is set to " + arr);
 });

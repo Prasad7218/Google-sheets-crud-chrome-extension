@@ -5,6 +5,7 @@ import axios from "axios";
 const Home = (props) => {
   const [data, setData] = useState([]);
   const [value, setValue] = useState([]);
+  const [cdata, setCdata] = useState([]);
   //   const [items] = useChromeStorageLocal("", 0);
 
   useEffect(() => {
@@ -46,9 +47,11 @@ const Home = (props) => {
   };
 
   const cData = () => {
-    var data1 = localStorage.getItem("tabledata");
+    var data1 = JSON.parse(localStorage.getItem("tabledata"));
+    setCdata(data1);
     console.log(data1);
-    document.getElementById("tab-data").innerHTML = data1;
+    console.log(data1[0]);
+    // document.getElementById("tab-data").innerHTML = data1;
   };
 
   return (
@@ -106,7 +109,11 @@ const Home = (props) => {
         </button>
         <h4 id="tab-data"></h4>
       </table>
-      <h1>{props.tdata}</h1>
+      <p>{cdata[0]}</p>
+      <p>{cdata[1]}</p>
+      <p>{cdata[2]}</p>
+      <p>{cdata[3]}</p>
+      <p>{cdata[4]}</p>
     </>
   );
 };
